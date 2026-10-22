@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ConnectX Telecom — Chat Support</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="chat-container">
+    <header class="chat-header">
+      <div class="header-left">
+        <div class="logo">CX</div>
+        <div>
+          <h1>ConnectX Support</h1>
+          <span class="status-dot"></span><span class="status-text">Online</span>
+        </div>
+      </div>
+      <button id="new-chat-btn" title="New conversation">New Chat</button>
+    </header>
+
+    <main id="messages" class="chat-messages">
+      <div class="message bot-message">
+        <div class="message-bubble">
+          👋 Hi! I'm ConnectX Telecom's virtual assistant. How can I help you today?
+        </div>
+      </div>
+    </main>
+
+    <footer class="chat-input-area">
+      <form id="chat-form" autocomplete="off">
+        <input
+          type="text"
+          id="user-input"
+          placeholder="Type your message…"
+          maxlength="500"
+          required
+        />
+        <button type="submit" id="send-btn">Send</button>
+      </form>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

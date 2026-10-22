@@ -1,0 +1,22 @@
+{
+  "name": "connectx-chatbot",
+  "version": "1.0.0",
+  "description": "ConnectX Telecom customer support chatbot powered by Groq",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test",
+    "test:api": "node --test test/server.test.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "express": "^4.22.3",
+    "groq-sdk": "^0.12.0"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
