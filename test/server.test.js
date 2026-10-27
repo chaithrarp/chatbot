@@ -33,7 +33,7 @@ describe('API and model response checks', () => {
     const health = await apiHealth.json();
     assert.equal(apiHealth.status, 200);
     assert.equal(health.status, 'ok');
-    assert.equal(health.model, 'openai/gpt-oss-120b');
+    assert.ok(Array.isArray(health.models) && health.models.length > 0);
     assert.equal(health.providerConfigured, Boolean(process.env.GROQ_API_KEY));
 
     const modelHealth = await fetch(`${baseUrl}/api/test-groq`);
@@ -42,7 +42,7 @@ describe('API and model response checks', () => {
     assert.equal(model.status, 'ok');
     assert.equal(model.response, 'Test model response');
     assert.equal(calls.length, 1);
-    assert.equal(calls[0].max_tokens, 128);
+    assert.equal(calls[0].max_completion_tokens, 64);
   });
 
   it('returns a model reply and preserves conversation history', async () => {
@@ -93,7 +93,7 @@ describe('API and model response checks', () => {
       body: JSON.stringify({ message: 'Hello' }),
     });
     assert.equal(response.status, 502);
-    assert.match((await response.json()).error, /empty response/i);
+    assert.match((await response.json()).error, /could not respond/i);
   });
 
   it('does not retain a failed message in the next model request', async () => {
@@ -114,9 +114,10 @@ describe('API and model response checks', () => {
       body: JSON.stringify({ message: 'Retry' }),
     });
     assert.equal(secondResponse.status, 200);
-    // messages = [system, user:'Retry']
-    assert.equal(calls[1].messages.length, 2);
-    assert.equal(calls[1].messages[1].content, 'Retry');
+    // the failed request tried every model, so check the LAST call
+    const lastCall = calls[calls.length - 1];
+    assert.equal(lastCall.messages.length, 2); // [system, user:'Retry']
+    assert.equal(lastCall.messages[1].content, 'Retry');
   });
 
   it('reports upstream timeouts and model health failures', async () => {

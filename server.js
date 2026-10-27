@@ -217,6 +217,8 @@ function startServer() {
     console.error('Warning: GROQ_API_KEY is not set. Put it in a .env file next to server.js.');
   }
 
+  // Local mode = Ollama on this machine (works with no internet).
+  // Otherwise = Groq cloud with the model fallback list.
   const app = useLocal
     ? createApp({
         chatComplete: require('./local-llm').ollamaComplete,
