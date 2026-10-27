@@ -211,13 +211,23 @@ function createApp({
 }
 
 function startServer() {
-  if (!apiKey) {
+  const useLocal = String(process.env.USE_LOCAL || '').toLowerCase() === 'true';
+
+  if (!useLocal && !apiKey) {
     console.error('Warning: GROQ_API_KEY is not set. Put it in a .env file next to server.js.');
   }
-  const app = createApp();
+
+  const app = useLocal
+    ? createApp({
+        chatComplete: require('./local-llm').ollamaComplete,
+        models: [process.env.LOCAL_MODEL || 'llama3.2:3b'],
+        apiTimeoutMs: 60000, // local CPU inference is slower than Groq
+      })
+    : createApp();
+
   return app.listen(PORT, () => {
     console.log(`ConnectX Chatbot running at http://localhost:${PORT}`);
-    console.log(`Models (in order): ${MODELS.join(', ')}`);
+    console.log(useLocal ? 'Mode: LOCAL (offline)' : `Models (in order): ${MODELS.join(', ')}`);
   });
 }
 
